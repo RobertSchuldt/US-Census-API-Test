@@ -59,7 +59,7 @@ columns2 = ['ST','COUNTY','PAYANN','LFO','ESTAB','EMP','CD115']
 
 print('Requesting data from the 2015 County Business Patterns file')
 	
-cbp = requests.get("https://api.census.gov/data/2015/cbp?get=ST,COUNTY,PAYANN,LFO,ESTAB,EMP,CD115&for=county:*&key=62ede8de563355b8af858c6589ba30156de41404")
+cbp = requests.get("https://api.census.gov/data/2015/cbp?get=GEO_ID,COUNTY,ST,EMP,ESTAB,LFO_TTL,GEO_TTL&for=county:*&key=62ede8de563355b8af858c6589ba30156de41404")
 
 if (cbp.status_code != 200):
     print('Error detected receiving' + str(cbp.status_code)+ ')')
