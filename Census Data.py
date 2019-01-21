@@ -21,12 +21,12 @@ from us import states
 
 #columns = ['COUNTY','STATE','B11001_001E','B18135_001E','B25110_006E']
 
-columns = ['CP02_2011_001E','CP02_2012_015E','CP03_2015_069E','CP04_2015_058E' ]
+columns = ['CP02_2011_001E','CP02_2012_015E','CP03_2015_069E','CP04_2015_058E','CP03_2015_097E',  ]
 
 #Connecting to Census data with API key
 print('Requesting data from the American Communities Survey')
 
-acs = requests.get("https://api.census.gov/data/2015/acs/acs1/cprofile?get=CP02_2011_001E,CP02_2012_015E,CP03_2015_069E,CP04_2015_058E&for=county:*&key=62ede8de563355b8af858c6589ba30156de41404")
+acs = requests.get("https://api.census.gov/data/2015/acs/acs1/cprofile?get=CP02_2011_001E,CP02_2012_015E,CP03_2015_069E,CP04_2015_058E,CP03_2015_098E,CP03_2015_097E,CP04_2011_048E,CP04_2011_049E&for=county:*&key=62ede8de563355b8af858c6589ba30156de41404")
 
 if (acs.status_code != 200):
     print('Error detected receiving (status code: ' + str(acs.status_code) + ')' )
@@ -38,7 +38,7 @@ print(acs.text)
 
 content = acs.json()
 
-print(acs_content)
+print(content)
 #Make the data pulled from the ACS into a pandas dataframe
 dataset= pd.DataFrame(content)
 dataset.columns= dataset.iloc[0]
@@ -50,3 +50,23 @@ dataset = dataset.drop([0])
 #Need to concat the FIPS state and county codes to get useful number. 
 dataset['FIPS'] = dataset['state'].str.cat(dataset['county'])
 
+
+#Now for our tests for regression let's grab some data on the economic
+#activity for the FIPS state and counties. This is also good practice
+#for merging data together
+
+columns2 = ['ST','COUNTY','PAYANN','LFO','ESTAB','EMP','CD115']
+
+print('Requesting data from the 2015 County Business Patterns file')
+	
+cbp = requests.get("https://api.census.gov/data/2015/cbp?get=ST,COUNTY,PAYANN,LFO,ESTAB,EMP,CD115&for=county:*&key=62ede8de563355b8af858c6589ba30156de41404")
+
+if (cbp.status_code != 200):
+    print('Error detected receiving' + str(cbp.status_code)+ ')')
+    quit()
+    
+print('Sucessful request from County Business Patterns file')
+
+cbp_content = cbp.json()
+
+print(cbp_content)
